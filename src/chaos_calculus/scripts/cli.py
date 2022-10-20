@@ -1,7 +1,6 @@
 import textwrap
 
 import click
-import matplotlib.pyplot as plt
 from chaos_calculus.models.text2image.keras import KerasModel
 from chaos_calculus.repl import Repl
 from chaos_calculus.util import timing
@@ -33,7 +32,7 @@ def main():
     with Repl("Prompt", prefill=prompt, banner=banner) as repl:
         click.echo("Initializing Stable Diffusion...")
         with timing("Model initialized"):
-            model = KerasModel(width=512, height=512, batch_size=3, mixed_fp=True, jit_compile=True)
+            model = KerasModel(width=512, height=512, batch_size=9, mixed_fp=True, jit_compile=True)
 
         for prompt in repl:
             positive, _, negative = prompt.partition("~")
@@ -41,18 +40,7 @@ def main():
             negative = negative.strip()
 
             with timing("Image generated"):
-                images = model.generate_batch(9, positive, negative)
-
-            plt.figure(figsize=(19.2, 10.8))
-            for i in range(len(images)):
-                plt.subplots_adjust(0, 0, 1, 1, 0, 0)
-                plt.subplot(len(images) // MAX_COLUMN, MAX_COLUMN, i + 1)
-                plt.imshow(images[i])
-                plt.axis("off")
-
-            mgr = plt.get_current_fig_manager()
-            mgr.window.state('zoomed')
-            plt.show()
+                model.generate_plot(positive, negative)
 
 
 ################################################################################

@@ -1,6 +1,7 @@
 from enum import Enum, auto
 
 import numpy as np
+from chaos_calculus.util import grid_plot
 
 ###############################################################################
 
@@ -53,9 +54,27 @@ class Model:
     def generate_plot(self,
                       prompt: str,
                       negative_prompt: str | None = None,
-                      grid: tuple[int, int] | None = None) -> None:
+                      figsize: tuple[float, float] = (19.2, 10.8),
+                      grid: tuple[int, int] | None = None,
+                      batch_mode: BatchMode | None = None,
+                      batch_size: int | None = None,
+                      maximized: bool = True,
+                      blocked: bool = False) -> None:
         """Plot generated image on specified grid."""
-        pass
+        if not grid:
+            # attempt to generate grid that fills up screen space
+            grid = self.make_grid(figsize)
+
+        size = grid[0] * grid[1]
+        images = self.generate_batch(size, prompt, negative_prompt, batch_mode, batch_size)
+
+        grid_plot(images, grid, figsize, maximized, blocked)
+
+    def make_grid(self, figsize: tuple[float, float] = (19.2, 10.8)) -> tuple[int, int]:
+        """Generate a grid that attemps to fill up screen space."""
+        rows = (figsize[0] * 100) // self.height
+        columns = (figsize[1] * 100) // self.width
+        return (int(rows), int(columns))
 
     def split_batches(self, size: int, batch_mode: BatchMode | None = None, batch_size: int | None = None) -> list[int]:
         """Divide batches according to `batch_size` and configured `batch_mode`."""
