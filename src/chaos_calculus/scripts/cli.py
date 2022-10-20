@@ -47,7 +47,6 @@ def main():
             model = keras_cv.models.StableDiffusion(img_width=512, img_height=512, jit_compile=True)
             # model = keras_cv.models.StableDiffusion(img_width=640, img_height=640, jit_compile=True)
             # model = keras_cv.models.StableDiffusion(img_width=640, img_height=1080 - 32, jit_compile=True)
-        click.echo()
 
         for prompt in repl:
             positive, _, negative = prompt.partition("~")

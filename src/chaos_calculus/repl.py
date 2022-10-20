@@ -15,10 +15,15 @@ except ImportError:
 class Repl:
     """Basic implementation of read-eval-print-loop interface."""
 
-    def __init__(self, prompt: str, prefill: Optional[str] = None, banner: Optional[str] = None):
+    def __init__(self,
+                 prompt: str,
+                 prefill: Optional[str] = None,
+                 banner: Optional[str] = None,
+                 nl_before: bool = True):
         self.prompt = prompt
         self.prefill = prefill
         self.banner = banner
+        self.nl_before = nl_before
 
     def __enter__(self):
         if self.banner:
@@ -42,6 +47,10 @@ class Repl:
         if self.prefill:
             # use readline to prefill the answers
             readline.set_pre_input_hook(_hook)
+
+        if self.nl_before:
+            # append newline before prompt
+            click.echo()
 
         # prompt for input
         value = click.prompt(self.prompt, type=str)
