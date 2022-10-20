@@ -1,12 +1,11 @@
 import textwrap
-import time
-from contextlib import contextmanager
 
 import click
 import keras_cv
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from chaos_calculus.repl import Repl
+from chaos_calculus.util import timing
 from tensorflow import keras
 
 try:
@@ -35,7 +34,7 @@ def main():
         / /___/ / / / /_/ / /_/ (__  )  / /___/ /_/ / / /__/ /_/ / / /_/ (__  )
         \____/_/ /_/\__,_/\____/____/   \____/\__,_/_/\___/\__,_/_/\__,_/____/
 
-        (Press Ctrl+C multiple times to abort.)
+        (Press Ctrl+C and Enter to abort.)
         """)
 
     # prompt = "photograph of an astronaut riding a horse"
@@ -78,10 +77,3 @@ def main():
 
 
 ################################################################################
-
-
-@contextmanager
-def timing(prompt: str):
-    start = time.monotonic()
-    yield
-    click.echo(f"{prompt} in {time.monotonic() - start:.2f} seconds.")
