@@ -8,7 +8,7 @@ from . import BatchMode, Model
 
 
 class KerasModel(Model):
-    """Stable diffusion implementation using keras_cv."""
+    """Stable Diffusion implementation using keras_cv."""
 
     def __init__(self,
                  width=512,

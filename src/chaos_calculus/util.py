@@ -13,6 +13,7 @@ import numpy as np
 
 @contextmanager
 def timing(prompt: str):
+    """Utility for measuring time taken to execute code snippets wrapped in with-context."""
     start = time.monotonic()
     yield
     click.echo(f"{prompt} in {time.monotonic() - start:.2f} seconds.")
@@ -23,6 +24,7 @@ def grid_plot(images: list[np.ndarray],
               figsize: tuple[float, float] = (19.2, 10.8),
               maximized: bool = True,
               blocked: bool = False):
+    """Plot given images in grid."""
     plt.figure(figsize=figsize)
     for i in range(len(images)):
         plt.subplots_adjust(0, 0, 1, 1, 0, 0)

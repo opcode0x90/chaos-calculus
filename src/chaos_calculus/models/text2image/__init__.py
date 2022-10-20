@@ -7,7 +7,7 @@ from chaos_calculus.util import grid_plot
 
 
 class BatchMode(Enum):
-    """Enumeration for describing the batch mode for image generation."""
+    """Enumeration for describing the batch mode used for image generation."""
     DISABLED = auto()
     FULL = auto()
     CHUNKED = auto()
