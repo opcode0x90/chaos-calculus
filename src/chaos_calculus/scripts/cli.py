@@ -1,22 +1,12 @@
 import textwrap
 
 import click
-import keras_cv
 import matplotlib.pyplot as plt
-import tensorflow as tf
+from chaos_calculus.models.text2image.keras import KerasModel
 from chaos_calculus.repl import Repl
 from chaos_calculus.util import timing
-from tensorflow import keras
-
-try:
-    import gnureadline as readline
-except ImportError:
-    import readline
 
 ################################################################################
-
-# use mixed precision for speedups
-keras.mixed_precision.set_global_policy("mixed_float16")
 
 # max pictures per row
 MAX_COLUMN = 3
@@ -43,10 +33,7 @@ def main():
     with Repl("Prompt", prefill=prompt, banner=banner) as repl:
         click.echo("Initializing Stable Diffusion...")
         with timing("Model initialized"):
-            # model = keras_cv.models.StableDiffusion(img_width=512, img_height=512)
-            model = keras_cv.models.StableDiffusion(img_width=512, img_height=512, jit_compile=True)
-            # model = keras_cv.models.StableDiffusion(img_width=640, img_height=640, jit_compile=True)
-            # model = keras_cv.models.StableDiffusion(img_width=640, img_height=1080 - 32, jit_compile=True)
+            model = KerasModel(width=512, height=512, batch_size=3, mixed_fp=True, jit_compile=True)
 
         for prompt in repl:
             positive, _, negative = prompt.partition("~")
@@ -54,14 +41,7 @@ def main():
             negative = negative.strip()
 
             with timing("Image generated"):
-                encoded_positive = model.encode_text(positive)
-                model._get_unconditional_context = lambda: model.encode_text(negative)
-
-                images = model.generate_image(encoded_positive, batch_size=IMAGES)
-                # images = []
-                # for _ in range(3):
-                #     im = model.generate_image(encoded_positive)
-                #     images.extend(im)
+                images = model.generate_batch(9, positive, negative)
 
             plt.figure(figsize=(19.2, 10.8))
             for i in range(len(images)):
