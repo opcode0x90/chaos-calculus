@@ -1,14 +1,8 @@
 from enum import Enum, auto
+from typing import Protocol, Type
 
 import numpy as np
 from chaos_calculus.util import grid_plot
-
-from .keras import KerasModel
-
-###############################################################################
-
-# list of registered models
-MODELS = {'keras': KerasModel}
 
 ###############################################################################
 
@@ -20,8 +14,15 @@ class BatchMode(Enum):
     CHUNKED = auto()
 
 
-class Model:
+class Model(Protocol):
     """Common interface for text-to-image model with different implementations."""
+
+    width: int
+    height: int
+    batch_mode: BatchMode
+    batch_size: int
+    args: tuple
+    kwargs: dict
 
     def __init__(self,
                  width=512,
@@ -102,3 +103,12 @@ class Model:
             raise NotImplementedError
 
         return batches
+
+
+###############################################################################
+
+
+# list of registered models
+def get_models() -> dict[str, Type[Model]]:
+    from .keras import KerasModel
+    return {'keras': KerasModel}
