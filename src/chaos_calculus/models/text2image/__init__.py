@@ -3,6 +3,13 @@ from enum import Enum, auto
 import numpy as np
 from chaos_calculus.util import grid_plot
 
+from .keras import KerasModel
+
+###############################################################################
+
+# list of registered models
+MODELS = {'keras': KerasModel}
+
 ###############################################################################
 
 
