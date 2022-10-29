@@ -1,7 +1,7 @@
 from email.policy import default
 
 import click
-from chaos_calculus.models.text2image import get_models
+from chaos_calculus.models.text2img import get_models
 from chaos_calculus.repl import Repl
 from chaos_calculus.util import timing
 

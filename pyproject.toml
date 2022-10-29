@@ -14,13 +14,13 @@ matplotlib = "^3.6.0"
 pyreadline3 = { version = "^3.4.1", platform = "win32" }
 gnureadline = {version = "^8.1.2", platform = "darwin"}
 
-[tool.poetry.group.text2image-pytorch.dependencies]
+[tool.poetry.group.text2img-pytorch.dependencies]
 torch = {version = "^1.13.0+cu117", source = "pytorch"}
 diffusers = "^0.6.0"
 transformers = "^4.23.1"
 ftfy = "^6.1.1"
 
-[tool.poetry.group.text2image-keras.dependencies]
+[tool.poetry.group.text2img-keras.dependencies]
 keras-cv = "^0.3.3"
 tensorflow = { version = "^2.10.0", platform = "win32" }
 tensorflow-macos = { version = "^2.10.0", platform = "darwin" }
