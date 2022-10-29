@@ -39,14 +39,27 @@ MODELS = get_models()
               type=int,
               default=3,
               help="Number of images to generate per batch. Reduce batch size if experiencing out of memory error.")
-@click.option('--mixed-fp', is_flag=True, default=True, show_default=True, help="Enable mixed precision.")
-@click.option('--jit-compile', is_flag=True, default=True, show_default=True, help="Enable JIT compile.")
+@click.option('--mixed-fp/--no-mixed-fp', is_flag=True, default=True, show_default=True, help="Enable mixed precision.")
+@click.option('--jit-compile/--no-jit-compile',
+              is_flag=True,
+              default=True,
+              show_default=True,
+              help="Enable JIT compile.")
 @click.option('--fp16',
               is_flag=True,
               default=False,
               show_default=True,
               help="Load model in reduced precision mode (float16). This will consume less GPU memory.")
-def main(backend: str, width: int, height: int, batch_size: int, mixed_fp: bool, jit_compile: bool, fp16: bool):
+@click.option(
+    '--safemode/--no-safemode',
+    is_flag=True,
+    default=True,
+    show_default=True,
+    help=
+    "Enable built-in safety checker. This will generate a warning when potentially NSFW image is created and replace them with black image."
+)
+def main(backend: str, width: int, height: int, batch_size: int, mixed_fp: bool, jit_compile: bool, fp16: bool,
+         safemode: bool):
 
     if not (Model := MODELS.get(backend)):
         raise click.UsageError(f"Error occured while loading backend: `{backend}`")
@@ -62,7 +75,8 @@ def main(backend: str, width: int, height: int, batch_size: int, mixed_fp: bool,
                           batch_size=batch_size,
                           mixed_fp=mixed_fp,
                           jit_compile=jit_compile,
-                          fp16=fp16)
+                          fp16=fp16,
+                          safemode=safemode)
 
         for prompt in repl:
             positive, _, negative = prompt.partition("~")

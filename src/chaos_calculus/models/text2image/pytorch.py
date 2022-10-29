@@ -22,6 +22,7 @@ class PyTorchModel(Model):
                  batch_size: int = 3,
                  fp16: bool = False,
                  mixed_fp: bool = False,
+                 safemode: bool = True,
                  *args,
                  **kwargs) -> None:
         super().__init__(width, height, batch_mode, batch_size, *args, **kwargs)
@@ -29,11 +30,15 @@ class PyTorchModel(Model):
         self.fp16 = fp16
         self.mixed_fp = mixed_fp
 
-        # initialize the model
         if fp16:
             # use model with reduced precision
             kwargs |= {'torch_dtype': torch.float16, 'revision': "fp16"}
 
+        if not safemode:
+            # disable built-in safety checker (lots of FP when used with anime models)
+            kwargs |= {'safety_checker': None}
+
+        # initialize the model
         pipe = StableDiffusionPipeline.from_pretrained(self.model_id, use_auth_token=True, **kwargs)
         pipe = pipe.to(self.device)
 
