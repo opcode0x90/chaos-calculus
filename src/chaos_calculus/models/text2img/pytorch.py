@@ -69,6 +69,13 @@ class StableDiffusionv15Model(PyTorchModel):
     model_id = "runwayml/stable-diffusion-v1-5"
 
 
+class WaifuModel(PyTorchModel):
+    """Stable Diffusion model that has been conditioned on high-quality anime images through fine-tuning.. https://huggingface.co/hakurei/waifu-diffusion"""
+
+    model_id = "hakurei/waifu-diffusion"
+    prompt = "1girl, aqua eyes, baseball cap, blonde hair, closed mouth, earrings, green background, hat, hoop earrings, jewelry, looking at viewer, shirt, short hair, simple background, solo, upper body, yellow shirt"
+
+
 class CyberpunkEdgerunnerModel(PyTorchModel):
     """Stable Diffusion model finetuned to Cyberpunk Edgerunner anime. https://huggingface.co/DGSpitzer/Cyberpunk-Anime-Diffusion"""
 
