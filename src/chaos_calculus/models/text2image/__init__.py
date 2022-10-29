@@ -17,6 +17,9 @@ class BatchMode(Enum):
 class Model:
     """Common interface for text-to-image model with different implementations."""
 
+    # example prompt for each model
+    prompt: str
+
     width: int
     height: int
     batch_mode: BatchMode

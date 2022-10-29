@@ -10,6 +10,8 @@ from . import BatchMode, Model
 class KerasModel(Model):
     """Stable Diffusion implementation using keras_cv."""
 
+    prompt = "ultra-detailed. uhd 8k, artstation, cryengine, octane render, unreal engine. a photograph of an astronaut riding a horse"
+
     def __init__(self,
                  width=512,
                  height=512,

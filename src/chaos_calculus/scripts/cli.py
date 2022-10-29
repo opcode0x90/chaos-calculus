@@ -47,13 +47,16 @@ MODELS = get_models()
               show_default=True,
               help="Load model in reduced precision mode (float16). This will consume less GPU memory.")
 def main(backend: str, width: int, height: int, batch_size: int, mixed_fp: bool, jit_compile: bool, fp16: bool):
-    # prompt = "a photograph of an astronaut riding a horse"
-    prompt = "ultra-detailed. uhd 8k, artstation, cryengine, octane render, unreal engine. a photograph of an astronaut riding a horse"
+
+    if not (Model := MODELS.get(backend)):
+        raise click.UsageError(f"Error occured while loading backend: `{backend}`")
+
+    # get example prompt for the model
+    prompt = Model.prompt
 
     with Repl("Prompt", prefill=prompt, banner=BANNER) as repl:
         click.echo("Initializing Stable Diffusion...")
         with timing("Model initialized"):
-            Model = MODELS[backend]
             model = Model(width=width,
                           height=height,
                           batch_size=batch_size,

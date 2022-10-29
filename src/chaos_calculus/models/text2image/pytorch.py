@@ -13,6 +13,8 @@ class PyTorchModel(Model):
     model_id = "CompVis/stable-diffusion-v1-4"
     device = "cuda"
 
+    prompt = "a photo of an astronaut riding a horse on mars"
+
     def __init__(self,
                  width=512,
                  height=512,
@@ -58,4 +60,6 @@ class PyTorchModel(Model):
 #
 class CyberpunkEdgerunnerModel(PyTorchModel):
     """Stable Diffusion model finetuned to Cyberpunk Edgerunner anime. https://huggingface.co/DGSpitzer/Cyberpunk-Anime-Diffusion"""
+
     model_id = "DGSpitzer/Cyberpunk-Anime-Diffusion"
+    prompt = "a beautiful perfect face girl in dgs illustration style, Anime fine details portrait of school girl in front of modern tokyo city landscape on the background deep bokeh, anime masterpiece, 8k, sharp high quality anime"
