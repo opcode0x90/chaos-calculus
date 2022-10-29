@@ -63,8 +63,14 @@ class PyTorchModel(Model):
 #
 # Variants of original Stable Diffusion model
 #
+class StableDiffusionv15Model(PyTorchModel):
+    """Stable Diffusion model trained with extra steps. https://huggingface.co/runwayml/stable-diffusion-v1-5"""
+
+    model_id = "runwayml/stable-diffusion-v1-5"
+
+
 class CyberpunkEdgerunnerModel(PyTorchModel):
     """Stable Diffusion model finetuned to Cyberpunk Edgerunner anime. https://huggingface.co/DGSpitzer/Cyberpunk-Anime-Diffusion"""
 
     model_id = "DGSpitzer/Cyberpunk-Anime-Diffusion"
-    prompt = "a beautiful perfect face girl in dgs illustration style, Anime fine details portrait of school girl in front of modern tokyo city landscape on the background deep bokeh, anime masterpiece, 8k, sharp high quality anime"
+    prompt = "Anime fine details portrait of school girl in front of modern tokyo city landscape on the background deep bokeh, anime masterpiece, 8k, sharp high quality anime, a beautiful perfect face girl in dgs illustration style"

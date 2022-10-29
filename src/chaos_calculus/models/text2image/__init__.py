@@ -115,6 +115,11 @@ class Model:
 # list of registered models
 def get_models() -> dict[str, Type[Model]]:
     from .keras import KerasModel
-    from .pytorch import CyberpunkEdgerunnerModel, PyTorchModel
+    from .pytorch import (CyberpunkEdgerunnerModel, PyTorchModel, StableDiffusionv15Model)
 
-    return {'keras': KerasModel, 'pytorch': PyTorchModel, 'edgerunner': CyberpunkEdgerunnerModel}
+    return {
+        'keras': KerasModel,
+        'pytorch': PyTorchModel,
+        'sd15': StableDiffusionv15Model,
+        'edgerunner': CyberpunkEdgerunnerModel
+    }
