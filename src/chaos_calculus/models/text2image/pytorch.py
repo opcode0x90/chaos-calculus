@@ -20,7 +20,9 @@ class PyTorchModel(Model):
                  batch_size: int = 3,
                  *args,
                  **kwargs) -> None:
+        # TODO: implement batch inference
         batch_size = 1
+
         super().__init__(width, height, batch_mode, batch_size, *args, **kwargs)
 
         # initialize the model

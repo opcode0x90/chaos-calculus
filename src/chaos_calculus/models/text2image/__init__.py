@@ -52,7 +52,6 @@ class Model:
         """Generate a bunch of images using given prompts."""
         images = []
         batches = self.split_batches(size, batch_mode, batch_size)
-        print(f"{batches=}")
 
         for batch_size in batches:
             im = self.generate(prompt, negative_prompt, batch_size)
@@ -75,8 +74,6 @@ class Model:
             grid = self.make_grid(figsize)
 
         size = grid[0] * grid[1]
-        print(f"{grid=}")
-        print(f"{size=}")
         images = self.generate_batch(size, prompt, negative_prompt, batch_mode, batch_size)
 
         grid_plot(images, grid, figsize, maximized, blocked)
