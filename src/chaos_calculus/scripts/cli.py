@@ -32,13 +32,13 @@ MODELS = get_models()
               help="Specify which backend for Stable Diffusion to load.")
 def main(backend: str):
     # prompt = "photograph of an astronaut riding a horse"
-    prompt = "ultra-detailed. uhd 8k, artstation, cryengine, octane render, unreal engine. photograph of an astronaut riding a horse"
+    prompt = "ultra-detailed. uhd 8k, artstation, cryengine, octane render, unreal engine. a photograph of an astronaut riding a horse"
 
     with Repl("Prompt", prefill=prompt, banner=BANNER) as repl:
         click.echo("Initializing Stable Diffusion...")
         with timing("Model initialized"):
             Model = MODELS[backend]
-            model = Model(width=512, height=512, batch_size=9, mixed_fp=True, jit_compile=True)
+            model = Model(width=512, height=512, fp16=True, mixed_fp=True, jit_compile=True)
 
         for prompt in repl:
             positive, _, negative = prompt.partition("~")

@@ -18,15 +18,24 @@ class PyTorchModel(Model):
                  height=512,
                  batch_mode: BatchMode = BatchMode.CHUNKED,
                  batch_size: int = 3,
+                 fp16: bool = False,
+                 mixed_fp: bool = False,
                  *args,
                  **kwargs) -> None:
-        # TODO: implement batch inference
-        batch_size = 1
-
         super().__init__(width, height, batch_mode, batch_size, *args, **kwargs)
 
+        self.fp16 = fp16
+        self.mixed_fp = mixed_fp
+
         # initialize the model
-        pipe = StableDiffusionPipeline.from_pretrained(self.model_id, use_auth_token=True)
+        if fp16:
+            # use model with reduced precision
+            pipe = StableDiffusionPipeline.from_pretrained(self.model_id,
+                                                           torch_dtype=torch.float16,
+                                                           revision="fp16",
+                                                           use_auth_token=True)
+        else:
+            pipe = StableDiffusionPipeline.from_pretrained(self.model_id, use_auth_token=True)
         pipe = pipe.to(self.device)
 
         self.pipe = pipe
@@ -35,5 +44,10 @@ class PyTorchModel(Model):
         """Generate image using given prompt."""
 
         with torch.autocast("cuda"):
+            results = self.pipe(prompt,
+                                negative_prompt=negative_prompt,
+                                num_images_per_prompt=batch_size,
+                                guidance_scale=7.5)
+
             # convert PIL image to numpy
-            return [np.array(image) for image in self.pipe(prompt, guidance_scale=7.5).images]
+            return [np.array(image) for image in results.images]
