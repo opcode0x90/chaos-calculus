@@ -30,12 +30,9 @@ class PyTorchModel(Model):
         # initialize the model
         if fp16:
             # use model with reduced precision
-            pipe = StableDiffusionPipeline.from_pretrained(self.model_id,
-                                                           torch_dtype=torch.float16,
-                                                           revision="fp16",
-                                                           use_auth_token=True)
-        else:
-            pipe = StableDiffusionPipeline.from_pretrained(self.model_id, use_auth_token=True)
+            kwargs |= {'torch_dtype': torch.float16, 'revision': "fp16"}
+
+        pipe = StableDiffusionPipeline.from_pretrained(self.model_id, use_auth_token=True, **kwargs)
         pipe = pipe.to(self.device)
 
         self.pipe = pipe
@@ -43,7 +40,7 @@ class PyTorchModel(Model):
     def generate(self, prompt: str, negative_prompt: str | None = None, batch_size: int = 1) -> list[np.ndarray]:
         """Generate image using given prompt."""
 
-        with torch.autocast("cuda"):
+        with torch.autocast("cuda", dtype=torch.float16, enabled=self.mixed_fp):
             results = self.pipe(prompt,
                                 negative_prompt=negative_prompt,
                                 num_images_per_prompt=batch_size,

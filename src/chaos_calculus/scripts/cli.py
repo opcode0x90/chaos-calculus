@@ -1,3 +1,5 @@
+from email.policy import default
+
 import click
 from chaos_calculus.models.text2image import get_models
 from chaos_calculus.repl import Repl
@@ -12,7 +14,7 @@ BANNER = """\
 / /___/ / / / /_/ / /_/ (__  )  / /___/ /_/ / / /__/ /_/ / / /_/ (__  )
 \____/_/ /_/\__,_/\____/____/   \____/\__,_/_/\___/\__,_/_/\__,_/____/
 
-(Press Ctrl+C and Enter to abort.)
+(Use Ctrl+C plus Return to exit.)
 """
 
 # max pictures per row
@@ -29,16 +31,35 @@ MODELS = get_models()
 @click.option('--backend',
               type=click.Choice(list(MODELS.keys()), case_sensitive=False),
               default='keras',
+              show_default=True,
               help="Specify which backend for Stable Diffusion to load.")
-def main(backend: str):
-    # prompt = "photograph of an astronaut riding a horse"
+@click.option('--width', type=int, default=512, show_default=True, help="Width of generated image.")
+@click.option('--height', type=int, default=512, show_default=True, help="Height of generated image.")
+@click.option('--batch-size',
+              type=int,
+              default=3,
+              help="Number of images to generate per batch. Reduce batch size if experiencing out of memory error.")
+@click.option('--mixed-fp', is_flag=True, default=True, show_default=True, help="Enable mixed precision.")
+@click.option('--jit-compile', is_flag=True, default=True, show_default=True, help="Enable JIT compile.")
+@click.option('--fp16',
+              is_flag=True,
+              default=False,
+              show_default=True,
+              help="Load model in reduced precision mode (float16). This will consume less GPU memory.")
+def main(backend: str, width: int, height: int, batch_size: int, mixed_fp: bool, jit_compile: bool, fp16: bool):
+    # prompt = "a photograph of an astronaut riding a horse"
     prompt = "ultra-detailed. uhd 8k, artstation, cryengine, octane render, unreal engine. a photograph of an astronaut riding a horse"
 
     with Repl("Prompt", prefill=prompt, banner=BANNER) as repl:
         click.echo("Initializing Stable Diffusion...")
         with timing("Model initialized"):
             Model = MODELS[backend]
-            model = Model(width=512, height=512, fp16=True, mixed_fp=True, jit_compile=True)
+            model = Model(width=width,
+                          height=height,
+                          batch_size=batch_size,
+                          mixed_fp=mixed_fp,
+                          jit_compile=jit_compile,
+                          fp16=fp16)
 
         for prompt in repl:
             positive, _, negative = prompt.partition("~")
