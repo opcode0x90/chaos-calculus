@@ -48,3 +48,14 @@ class PyTorchModel(Model):
 
             # convert PIL image to numpy
             return [np.array(image) for image in results.images]
+
+
+################################################################################
+
+
+#
+# Variants of original Stable Diffusion model
+#
+class CyberpunkEdgerunnerModel(PyTorchModel):
+    """Stable Diffusion model finetuned to Cyberpunk Edgerunner anime. https://huggingface.co/DGSpitzer/Cyberpunk-Anime-Diffusion"""
+    model_id = "DGSpitzer/Cyberpunk-Anime-Diffusion"
