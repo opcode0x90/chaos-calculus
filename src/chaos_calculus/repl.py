@@ -53,7 +53,7 @@ class Repl:
             click.echo()
 
         # prompt for input
-        value = click.prompt(self.prompt, type=str)
+        value = click.prompt(self.prompt, type=str, prompt_suffix="> ")
 
         # clear the input hook for next prompt
         readline.set_pre_input_hook()
