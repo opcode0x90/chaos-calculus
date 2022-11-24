@@ -2,6 +2,7 @@ from enum import Enum, auto
 from typing import Type
 
 import numpy as np
+
 from chaos_calculus.util import grid_plot
 
 ###############################################################################
@@ -115,12 +116,14 @@ class Model:
 # list of registered models
 def get_models() -> dict[str, Type[Model]]:
     from .keras import KerasModel
-    from .pytorch import (CyberpunkEdgerunnerModel, PyTorchModel, StableDiffusionv15Model, WaifuModel)
+    from .pytorch import (CyberpunkEdgerunnerModel, PyTorchModel, StableDiffusionv2Model, StableDiffusionv15Model,
+                          WaifuModel)
 
     return {
         'keras': KerasModel,
         'pytorch': PyTorchModel,
         'sd15': StableDiffusionv15Model,
+        'sd2': StableDiffusionv2Model,
         'waifu': WaifuModel,
         'edgerunner': CyberpunkEdgerunnerModel
     }

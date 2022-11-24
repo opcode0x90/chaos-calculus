@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from diffusers import StableDiffusionPipeline
+from diffusers import DiffusionPipeline, StableDiffusionPipeline, EulerDiscreteScheduler
 
 from . import BatchMode, Model
 
@@ -8,7 +8,7 @@ from . import BatchMode, Model
 
 
 class PyTorchModel(Model):
-    """Stable Diffusion implementation using pytorch. (using diffusers pipeline)"""
+    """Legacy Stable Diffusion v1.4 implementation using pytorch and diffusers pipeline."""
 
     model_id = "CompVis/stable-diffusion-v1-4"
     device = "cuda"
@@ -64,9 +64,47 @@ class PyTorchModel(Model):
 # Variants of original Stable Diffusion model
 #
 class StableDiffusionv15Model(PyTorchModel):
-    """Stable Diffusion model trained with extra steps. https://huggingface.co/runwayml/stable-diffusion-v1-5"""
+    """Legacy Stable Diffusion model trained with extra steps. https://huggingface.co/runwayml/stable-diffusion-v1-5"""
 
     model_id = "runwayml/stable-diffusion-v1-5"
+
+
+class StableDiffusionv2Model(PyTorchModel):
+    """Stable Diffusion model version 2. https://huggingface.co/stabilityai/stable-diffusion-2"""
+
+    model_id = "stabilityai/stable-diffusion-2"
+    prompt = "a professional photograph of an astronaut riding a horse"
+
+    def __init__(self,
+                 width=512,
+                 height=512,
+                 batch_mode: BatchMode = BatchMode.CHUNKED,
+                 batch_size: int = 3,
+                 fp16: bool = False,
+                 mixed_fp: bool = False,
+                 safemode: bool = True,
+                 *args,
+                 **kwargs) -> None:
+        super().__init__(width, height, batch_mode, batch_size, *args, **kwargs)
+
+        self.fp16 = fp16
+        self.mixed_fp = mixed_fp
+
+        if fp16:
+            # use model with reduced precision
+            kwargs |= {'torch_dtype': torch.float16, 'revision': "fp16"}
+
+        if not safemode:
+            # disable built-in safety checker (lots of FP when used with anime models)
+            kwargs |= {'safety_checker': None}
+
+        scheduler = EulerDiscreteScheduler.from_pretrained(self.model_id,
+                                                           subfolder="scheduler",
+                                                           prediction_type="v_prediction")
+        pipe = DiffusionPipeline.from_pretrained(self.model_id, scheduler=scheduler, use_auth_token=True, **kwargs)
+        pipe = pipe.to(self.device)
+
+        self.pipe = pipe
 
 
 class WaifuModel(PyTorchModel):
