@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chaos-calculus"
-version = "0.1.0"
+version = "0.1.1"
 description = "UI and Toolkit to mess around with Stable Diffusion."
 authors = ["opcode0x90 <opcode0x90.nop@gmail.com>"]
 
