@@ -11,7 +11,7 @@ class PyTorchModel(Model):
     """Legacy Stable Diffusion v1.4 implementation using pytorch and diffusers pipeline."""
 
     model_id = "CompVis/stable-diffusion-v1-4"
-    device = "cuda"
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     prompt = "a photo of an astronaut riding a horse on mars"
 
